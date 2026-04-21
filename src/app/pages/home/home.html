@@ -11,6 +11,9 @@
       <p class="text-sm text-gray-400">
         {{ medias.length }} {{ medias.length === 1 ? 'serie' : 'series' }}
       </p>
+      @if (medias.length > 0) {
+        <app-sort-control (orderChanged)="applySort($event)" />
+      }
     </div>
 
     @if (medias.length === 0) {

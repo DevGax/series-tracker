@@ -8,10 +8,11 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { ActiveFilter } from '../../models/filter.model';
 import { VisualMedia } from '../../models/generic.model';
 import { SearchFilters } from '../../components/search-filters/search-filters';
+import { SortControl, SortingCriteria } from '../../components/sort-control/sort-control';
 
 @Component({
   selector: 'app-home',
-  imports: [AsyncPipe, SerieCard, RouterModule, SearchFilters],
+  imports: [AsyncPipe, SerieCard, RouterModule, SearchFilters, SortControl],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -23,16 +24,29 @@ export class Home {
     genre: '',
   });
 
+  private orden$ = new BehaviorSubject<SortingCriteria>('recientes');
+
   visualMediaFilters$: Observable<VisualMedia[]>;
 
   constructor(private sitcomService: SitcomService) {
-    this.visualMediaFilters$ = combineLatest([this.sitcomService.visualMedia$, this.filters$]).pipe(
-      map(([series, filtros]) => this.filterVisualMedia(series, filtros)),
+    this.visualMediaFilters$ = combineLatest([
+      this.sitcomService.visualMedia$,
+      this.filters$,
+      this.orden$,
+    ]).pipe(
+      map(([series, filtros, orden]) => {
+        const filtradas = this.filterVisualMedia(series, filtros);
+        return this.ordenarSeries(filtradas, orden);
+      }),
     );
   }
 
   applyFilters(filtros: ActiveFilter): void {
     this.filters$.next(filtros);
+  }
+
+  applySort(orden: SortingCriteria): void {
+    this.orden$.next(orden);
   }
 
   private filterVisualMedia(series: VisualMedia[], filtros: ActiveFilter): VisualMedia[] {
@@ -57,6 +71,36 @@ export class Home {
 
       return true;
     });
+  }
+
+  private ordenarSeries(medias: VisualMedia[], criterio: SortingCriteria): VisualMedia[] {
+    const copia = [...medias];
+
+    switch (criterio) {
+      case 'recientes':
+        return copia.sort(
+          (a, b) => new Date(b.createDate!).getTime() - new Date(a.createDate!).getTime(),
+        );
+
+      case 'valoracion-desc':
+        return copia.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+
+      case 'valoracion-asc':
+        return copia.sort((a, b) => (a.rating ?? 0) - (b.rating ?? 0));
+
+      case 'alfabetico-asc':
+        return copia.sort((a, b) => a.title.localeCompare(b.title));
+
+      case 'alfabetico-desc':
+        return copia.sort((a, b) => b.title.localeCompare(a.title));
+
+      case 'estado':
+        const ordenEstados = { viewing: 0, pending: 1, completed: 2, abandoned: 3 };
+        return copia.sort((a, b) => ordenEstados[a.status] - ordenEstados[b.status]);
+
+      default:
+        return copia;
+    }
   }
 
   deleteMedia(id: string): void {

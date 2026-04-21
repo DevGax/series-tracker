@@ -24,9 +24,14 @@ export class SitcomService {
     return Array.from(generos).sort();
   }
 
-  addVisualMedia(serie: VisualMedia): void {
+  addVisualMedia(serie: Omit<VisualMedia, 'id' | 'createDate'>): void {
+    const nueva: VisualMedia = {
+      ...serie,
+      id: crypto.randomUUID(),
+      createDate: new Date(),
+    };
     const actuales = this.visualMedia.value;
-    this.visualMedia.next([...actuales, serie]);
+    this.visualMedia.next([...actuales, nueva]);
     this.save();
   }
 

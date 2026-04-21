@@ -36,7 +36,7 @@ export class SitcomForm {
     const isStatus = (value: string): value is Status =>
       ['viewing', 'completed', 'abandoned', 'pending'].includes(value);
 
-    const serie: VisualMedia = {
+    const media: VisualMedia = {
       id: crypto.randomUUID(),
       title: raw.title!,
       platform: raw.platform!,
@@ -51,7 +51,7 @@ export class SitcomForm {
       opinion: raw.opinion || undefined,
     };
 
-    this.serieService.addVisualMedia(serie);
+    this.serieService.addVisualMedia(media);
     this.router.navigate(['/']);
   }
 }

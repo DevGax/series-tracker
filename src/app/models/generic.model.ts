@@ -12,7 +12,8 @@ export interface VisualMedia {
   genres: string[];
   posterUrl?: string;
   creator?: string;
-  anio?: number;
+  year?: number;
+  createDate?: Date;
 }
 
 export type Status = 'viewing' | 'completed' | 'abandoned' | 'pending';
