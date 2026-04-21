@@ -4,18 +4,16 @@
     <p class="text-gray-400 text-sm">Seguimiento y opiniones personales</p>
   </div>
 
-  <!-- Filtros -->
   <app-search-filters (changedFilters)="applyFilters($event)" />
 
-  <!-- Resultados -->
-  @if (visualMediaFilters$ | async; as series) {
+  @if (visualMediaFilters$ | async; as medias) {
     <div class="flex items-center justify-between mb-6">
       <p class="text-sm text-gray-400">
-        {{ series.length }} {{ series.length === 1 ? 'serie' : 'series' }}
+        {{ medias.length }} {{ medias.length === 1 ? 'serie' : 'series' }}
       </p>
     </div>
 
-    @if (series.length === 0) {
+    @if (medias.length === 0) {
       <div class="text-center py-20">
         <div
           class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center"
@@ -40,8 +38,8 @@
       </div>
     } @else {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (serie of series; track serie.id) {
-          <app-serie-card [genericView]="serie" />
+        @for (media of medias; track media.id) {
+          <app-serie-card [genericView]="media" (delete)="deleteMedia($event)" />
         }
       </div>
     }

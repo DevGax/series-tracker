@@ -26,7 +26,7 @@ export class Home {
   visualMediaFilters$: Observable<VisualMedia[]>;
 
   constructor(private sitcomService: SitcomService) {
-    this.visualMediaFilters$ = combineLatest([this.sitcomService.series$, this.filters$]).pipe(
+    this.visualMediaFilters$ = combineLatest([this.sitcomService.visualMedia$, this.filters$]).pipe(
       map(([series, filtros]) => this.filterVisualMedia(series, filtros)),
     );
   }
@@ -57,5 +57,11 @@ export class Home {
 
       return true;
     });
+  }
+
+  deleteMedia(id: string): void {
+    if (confirm('¿Eliminar esta serie?')) {
+      this.sitcomService.deleteVisualMedia(id);
+    }
   }
 }

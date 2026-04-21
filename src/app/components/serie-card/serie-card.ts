@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { VisualMedia } from '../../models/generic.model';
 import { RouterLink } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './serie-card.css',
 })
 export class SerieCard {
+  @Output() delete = new EventEmitter<string>();
   @Input({ required: true }) genericView!: VisualMedia;
 
   get rating(): number {
