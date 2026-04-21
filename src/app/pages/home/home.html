@@ -1,6 +1,8 @@
-<div class="max-w-5xl mx-auto px-6 py-6">
-  <div class="mb-4">
-    <h1 class="text-3xl font-light text-gray-900 mb-1">Mi Media</h1>
+<div class="max-w-5xl mx-auto px-6 py-12">
+  <div class="mb-8">
+    <h1 class="text-3xl font-light text-gray-900 dark:text-white mb-1 transition-colors">
+      Mis series
+    </h1>
     <p class="text-gray-400 text-sm">Seguimiento y opiniones personales</p>
   </div>
 
@@ -8,7 +10,7 @@
 
   @if (visualMediaFilters$ | async; as medias) {
     <div class="flex items-center justify-between mb-6">
-      <p class="text-sm text-gray-400">
+      <p class="text-sm text-gray-400 dark:text-gray-500 transition-colors">
         {{ medias.length }} {{ medias.length === 1 ? 'serie' : 'series' }}
       </p>
       @if (medias.length > 0) {
@@ -19,9 +21,14 @@
     @if (medias.length === 0) {
       <div class="text-center py-20">
         <div
-          class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center"
+          class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center transition-colors"
         >
-          <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-7 h-7 text-gray-300 dark:text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -30,11 +37,15 @@
             />
           </svg>
         </div>
-        <p class="text-gray-400 mb-1">No se encontraron series</p>
-        <p class="text-gray-300 text-sm mb-4">Prueba ajustando los filtros</p>
+        <p class="text-gray-400 dark:text-gray-500 mb-1 transition-colors">
+          No se encontraron series
+        </p>
+        <p class="text-gray-300 dark:text-gray-600 text-sm mb-4 transition-colors">
+          Prueba ajustando los filtros
+        </p>
         <a
           routerLink="/nueva"
-          class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors"
+          class="inline-flex items-center px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
         >
           Añadir serie
         </a>
