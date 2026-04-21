@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-@import "tailwindcss";
-@import "flowbite/src/themes/minimal";   /* ← tema minimalista */
+@import 'tailwindcss';
+@import 'flowbite/src/themes/minimal'; /* ← tema minimalista */
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 

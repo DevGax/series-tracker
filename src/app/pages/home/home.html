@@ -1,0 +1,26 @@
+<div class="max-w-5xl mx-auto px-6 py-12">
+  <div class="mb-10">
+    <h1 class="text-3xl font-light text-gray-900 mb-2">Mis series</h1>
+    <p class="text-gray-500 text-sm">Seguimiento y opiniones personales</p>
+  </div>
+
+  @if (series$ | async; as series) {
+    @if (series.length === 0) {
+      <div class="text-center py-20">
+        <p class="text-gray-400 mb-4">No has añadido ninguna serie todavía</p>
+        <a
+          routerLink="/nueva"
+          class="inline-flex items-center px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Añadir primera serie
+        </a>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (serie of series; track serie.id) {
+          <app-serie-card [genericView]="serie" />
+        }
+      </div>
+    }
+  }
+</div>
