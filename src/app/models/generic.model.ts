@@ -1,4 +1,4 @@
-export interface GenericView {
+export interface VisualMedia {
   id: string;
   title: string;
   type: Type;

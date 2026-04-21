@@ -1,0 +1,124 @@
+<form [formGroup]="form" class="bg-white border border-gray-100 rounded-xl p-5 mb-4">
+  <div class="relative mb-5">
+    <svg
+      class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
+    <input
+      type="text"
+      formControlName="text"
+      placeholder="Buscar por título, creador..."
+      class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-lg text-sm focus:ring-2 focus:ring-gray-200 focus:bg-white transition-all placeholder:text-gray-400"
+    />
+  </div>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-3">
+    <!-- Estado -->
+    <div class="relative">
+      <select
+        formControlName="state"
+        class="appearance-none px-4 py-2 pr-8 bg-gray-50 border-0 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-gray-200 focus:bg-white cursor-pointer hover:bg-gray-100 transition-colors"
+      >
+        <option value="">Todos los estados</option>
+        <option value="viewing">Viendo</option>
+        <option value="completed">Completada</option>
+        <option value="abandoned">Abandonada</option>
+        <option value="pending">Pendiente</option>
+      </select>
+      <svg
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+
+    <!-- Plataforma -->
+    <div class="relative">
+      <select
+        formControlName="platform"
+        class="appearance-none px-4 py-2 pr-8 bg-gray-50 border-0 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-gray-200 focus:bg-white cursor-pointer hover:bg-gray-100 transition-colors"
+      >
+        <option value="">Todas las plataformas</option>
+        <option value="Netflix">Netflix</option>
+        <option value="HBO Max">HBO Max</option>
+        <option value="Amazon Prime">Amazon Prime</option>
+        <option value="Disney+">Disney+</option>
+        <option value="Apple TV+">Apple TV+</option>
+        <option value="Otra">Otra</option>
+      </select>
+      <svg
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+
+    <!-- Género -->
+    <div class="relative">
+      <select
+        formControlName="genre"
+        class="appearance-none px-4 py-2 pr-8 bg-gray-50 border-0 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-gray-200 focus:bg-white cursor-pointer hover:bg-gray-100 transition-colors"
+      >
+        <option value="">Todos los géneros</option>
+        <option value="Drama">Drama</option>
+        <option value="Thriller">Thriller</option>
+        <option value="Comedia">Comedia</option>
+        <option value="Sci-Fi">Sci-Fi</option>
+        <option value="Fantasía">Fantasía</option>
+        <option value="Crimen">Crimen</option>
+        <option value="Romance">Romance</option>
+        <option value="Documental">Documental</option>
+      </select>
+      <svg
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+
+    <!-- Limpiar filtros -->
+    @if (existsFilters()) {
+      <button
+        type="button"
+        (click)="cleanFilters()"
+        class="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-1.5"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+        Limpiar
+      </button>
+    }
+  </div>
+
+  <!-- Contador de resultados -->
+  @if (existsFilters()) {
+    <div class="mt-4 pt-4 border-t border-gray-50 text-xs text-gray-400">
+      Mostrando resultados filtrados
+    </div>
+  }
+</form>

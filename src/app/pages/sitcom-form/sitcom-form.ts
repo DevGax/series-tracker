@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SitcomService } from '../../services/sitcom.service';
-import { GenericView, Status } from '../../models/generic.model';
+import { VisualMedia, Status } from '../../models/generic.model';
 
 @Component({
   selector: 'app-sitcom-form',
@@ -19,12 +19,12 @@ export class SitcomForm {
     private router: Router,
   ) {
     this.form = this.fb.group({
-      titulo: ['', Validators.required],
-      plataforma: ['Netflix', Validators.required],
-      temporadas: [1, [Validators.required, Validators.min(1)]],
-      estado: ['pending', Validators.required],
-      valoracion: [null as number | null],
-      generos: ['', Validators.required],
+      title: ['', Validators.required],
+      platform: ['Netflix', Validators.required],
+      seasons: [1, [Validators.required, Validators.min(1)]],
+      state: ['pending', Validators.required],
+      rating: [null as number | null],
+      genre: ['', Validators.required],
       opinion: [''],
     });
   }
@@ -36,22 +36,22 @@ export class SitcomForm {
     const isStatus = (value: string): value is Status =>
       ['viewing', 'completed', 'abandoned', 'pending'].includes(value);
 
-    const serie: GenericView = {
+    const serie: VisualMedia = {
       id: crypto.randomUUID(),
-      title: raw.titulo!,
-      platform: raw.plataforma!,
+      title: raw.title!,
+      platform: raw.platform!,
       type: 'serie',
-      season: raw.temporadas!,
-      status: isStatus(raw.estado) ? raw.estado : 'pending',
-      rating: raw.valoracion ?? undefined,
+      season: raw.seasons!,
+      status: isStatus(raw.state) ? raw.state : 'pending',
+      rating: raw.rating ?? undefined,
       genres: raw
-        .generos!.split(',')
+        .genre!.split(',')
         .map((g: string) => g.trim())
         .filter(Boolean),
       opinion: raw.opinion || undefined,
     };
 
-    this.serieService.agregarSerie(serie);
+    this.serieService.addVisualMedia(serie);
     this.router.navigate(['/']);
   }
 }
