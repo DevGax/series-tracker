@@ -3,16 +3,12 @@ export interface VisualMedia {
   title: string;
   type: Type;
   platform: string;
-  season?: number;
+  seasons?: number;
   status: Status;
   rating?: number;
   opinion?: string;
-  startDate?: Date;
-  endDate?: Date;
   genres: string[];
   posterUrl?: string;
-  creator?: string;
-  year?: number;
   createDate?: Date;
 }
 

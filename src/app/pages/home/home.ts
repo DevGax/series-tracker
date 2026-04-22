@@ -55,8 +55,7 @@ export class Home {
         const busqueda = filtros.text.toLowerCase();
         const matchTitulo = serie.title.toLowerCase().includes(busqueda);
         const matchOpinion = serie.opinion?.toLowerCase().includes(busqueda) ?? false;
-        const matchCreador = serie.creator?.toLowerCase().includes(busqueda) ?? false;
-        if (!matchTitulo && !matchOpinion && !matchCreador) return false;
+        if (!matchTitulo && !matchOpinion) return false;
       }
 
       if (filtros.state && serie.status !== filtros.state) return false;

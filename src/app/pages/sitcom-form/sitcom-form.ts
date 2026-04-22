@@ -41,7 +41,7 @@ export class SitcomForm {
       title: raw.title!,
       platform: raw.platform!,
       type: 'serie',
-      season: raw.seasons!,
+      seasons: raw.seasons!,
       status: isStatus(raw.state) ? raw.state : 'pending',
       rating: raw.rating ?? undefined,
       genres: raw
