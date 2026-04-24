@@ -25,10 +25,10 @@ export class SerieCard {
   }
   get badgeClass(): string {
     const map: Record<string, string> = {
-      viewing: 'bg-blue-50 text-blue-600',
-      completed: 'bg-green-50 text-green-600',
-      abandoned: 'bg-red-50 text-red-600',
-      pending: 'bg-amber-50 text-amber-600',
+      viewing: 'bg-blue-200 text-blue-600',
+      completed: 'bg-green-200 text-green-600',
+      abandoned: 'bg-red-200 text-red-600',
+      pending: 'bg-amber-200 text-amber-600',
     };
     return map[this.genericView.status] || 'bg-gray-50 text-gray-600';
   }

@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { SitcomService } from '../../services/sitcom.service';
+import { Component, inject, signal } from '@angular/core';
+import { MediaService } from '../../services/media.service';
 import { AsyncPipe } from '@angular/common';
 import { SerieCard } from '../../components/serie-card/serie-card';
 import { Observable } from 'rxjs/internal/Observable';
 import { RouterModule } from '@angular/router';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, delay, map, of, startWith, tap } from 'rxjs';
 import { ActiveFilter } from '../../models/filter.model';
 import { VisualMedia } from '../../models/generic.model';
 import { SearchFilters } from '../../components/search-filters/search-filters';
@@ -17,6 +17,10 @@ import { SortControl, SortingCriteria } from '../../components/sort-control/sort
   styleUrl: './home.css',
 })
 export class Home {
+  mediaService = inject(MediaService);
+  // Signal para el estado de carga
+  loading = signal(true);
+  // cargando$: Observable<boolean> = new Observable<boolean>();
   private filters$ = new BehaviorSubject<ActiveFilter>({
     text: '',
     state: '',
@@ -28,15 +32,23 @@ export class Home {
 
   visualMediaFilters$: Observable<VisualMedia[]>;
 
-  constructor(private sitcomService: SitcomService) {
+  constructor() {
     this.visualMediaFilters$ = combineLatest([
-      this.sitcomService.visualMedia$,
+      this.mediaService.visualMedia$,
       this.filters$,
       this.orden$,
     ]).pipe(
+      tap(() => this.loading.set(true)),
       map(([series, filtros, orden]) => {
         const filtradas = this.filterVisualMedia(series, filtros);
         return this.ordenarSeries(filtradas, orden);
+      }),
+      delay(0),
+      tap(() => this.loading.set(false)), // termina de cargar
+      catchError((err) => {
+        this.loading.set(false);
+        console.error(err);
+        return of([]);
       }),
     );
   }
@@ -104,7 +116,7 @@ export class Home {
 
   deleteMedia(id: string): void {
     if (confirm('¿Eliminar esta serie?')) {
-      this.sitcomService.deleteVisualMedia(id);
+      this.mediaService.deleteVisualMedia(id);
     }
   }
 }

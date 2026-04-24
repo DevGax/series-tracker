@@ -1,35 +1,37 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SitcomService } from '../../services/sitcom.service';
+import { MediaService } from '../../services/media.service';
 import { VisualMedia, Status } from '../../models/generic.model';
 
 @Component({
-  selector: 'app-sitcom-form',
+  selector: 'app-media-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './sitcom-form.html',
-  styleUrl: './sitcom-form.css',
+  templateUrl: './media-form.html',
+  styleUrl: './media-form.css',
 })
 export class SitcomForm {
   form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private serieService: SitcomService,
+    private serieService: MediaService,
     private router: Router,
   ) {
     this.form = this.fb.group({
       title: ['', Validators.required],
+      type: ['serie', Validators.required],
       platform: ['Netflix', Validators.required],
       seasons: [1, [Validators.required, Validators.min(1)]],
       state: ['pending', Validators.required],
       rating: [null as number | null],
-      genre: ['', Validators.required],
+      genres: ['', Validators.required],
       opinion: [''],
     });
   }
 
-  guardar(): void {
+  save(): void {
+    console.log(this.form);
     if (this.form.invalid) return;
 
     const raw = this.form.value;
@@ -40,12 +42,12 @@ export class SitcomForm {
       id: crypto.randomUUID(),
       title: raw.title!,
       platform: raw.platform!,
-      type: 'serie',
+      type: raw.type!,
       seasons: raw.seasons!,
       status: isStatus(raw.state) ? raw.state : 'pending',
       rating: raw.rating ?? undefined,
       genres: raw
-        .genre!.split(',')
+        .genres!.split(',')
         .map((g: string) => g.trim())
         .filter(Boolean),
       opinion: raw.opinion || undefined,

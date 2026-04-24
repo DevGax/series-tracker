@@ -29,6 +29,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@supabase/supabase-js": "^2.104.0",
     "@tailwindcss/postcss": "^4.2.3",
     "flowbite": "^4.0.1",
     "postcss": "^8.5.10",

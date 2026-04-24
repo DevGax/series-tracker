@@ -1,5 +1,5 @@
 <nav
-  class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-4 transition-colors duration-300"
+  class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 py-2 transition-colors duration-300"
 >
   <div class="max-w-5xl mx-auto flex items-center justify-between">
     <a
@@ -10,16 +10,30 @@
     </a>
 
     <div class="flex items-center gap-6">
-      <a
-        routerLink="/"
-        class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >Inicio</a
-      >
-      <a
-        routerLink="/nueva"
-        class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >Añadir serie</a
-      >
+      @if (supabase.user(); as user) {
+        <a
+          routerLink="/"
+          class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >Inicio</a
+        >
+        <a
+          routerLink="/nueva"
+          class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >Añadir serie</a
+        >
+
+        <div class="flex items-center gap-3 pl-3 border-l border-gray-100 dark:border-gray-800">
+          <span class="text-xs text-gray-400 dark:text-gray-500 hidden sm:inline">{{
+            user.email
+          }}</span>
+          <button
+            (click)="logout()"
+            class="text-xs text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+          >
+            Salir
+          </button>
+        </div>
+      }
 
       <!-- Toggle tema -->
       <button

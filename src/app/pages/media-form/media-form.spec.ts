@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SitcomForm } from './sitcom-form';
+import { SitcomForm } from './media-form';
 
 describe('SitcomForm', () => {
   let component: SitcomForm;
