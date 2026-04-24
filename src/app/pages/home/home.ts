@@ -20,10 +20,10 @@ export class Home {
   mediaService = inject(MediaService);
   // Signal para el estado de carga
   loading = signal(true);
-  // cargando$: Observable<boolean> = new Observable<boolean>();
   private filters$ = new BehaviorSubject<ActiveFilter>({
     text: '',
     state: '',
+    type: '',
     platform: '',
     genre: '',
   });
@@ -41,7 +41,7 @@ export class Home {
       tap(() => this.loading.set(true)),
       map(([series, filtros, orden]) => {
         const filtradas = this.filterVisualMedia(series, filtros);
-        return this.ordenarSeries(filtradas, orden);
+        return this.sortMedias(filtradas, orden);
       }),
       delay(0),
       tap(() => this.loading.set(false)), // termina de cargar
@@ -72,6 +72,8 @@ export class Home {
 
       if (filtros.state && serie.status !== filtros.state) return false;
 
+      if (filtros.type && serie.type !== filtros.type) return false;
+
       if (filtros.platform && serie.platform !== filtros.platform) return false;
 
       if (
@@ -84,7 +86,7 @@ export class Home {
     });
   }
 
-  private ordenarSeries(medias: VisualMedia[], criterio: SortingCriteria): VisualMedia[] {
+  private sortMedias(medias: VisualMedia[], criterio: SortingCriteria): VisualMedia[] {
     const copia = [...medias];
 
     switch (criterio) {

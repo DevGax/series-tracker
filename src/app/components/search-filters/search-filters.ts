@@ -19,6 +19,7 @@ export class SearchFilters {
     this.form = this.fb.group({
       text: [''],
       state: [''],
+      type: [''],
       platform: [''],
       genre: [''],
     });
@@ -32,6 +33,7 @@ export class SearchFilters {
         this.changedFilters.emit({
           text: valores.text || '',
           state: valores.state || '',
+          type: valores.type || '',
           platform: valores.platform || '',
           genre: valores.genre || '',
         });
@@ -47,6 +49,7 @@ export class SearchFilters {
     this.form.reset({
       text: '',
       state: '',
+      type: '',
       platform: '',
       genre: '',
     });
