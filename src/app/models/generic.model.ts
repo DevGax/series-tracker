@@ -6,6 +6,7 @@ export interface VisualMedia {
   seasons?: number;
   status: Status;
   rating?: number;
+  cardTitle?: string;
   opinion?: string;
   genres: string[];
   posterUrl?: string;

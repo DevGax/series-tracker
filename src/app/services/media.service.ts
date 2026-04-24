@@ -34,33 +34,56 @@ export class MediaService {
       seasons: item.seasons ?? undefined,
       status: item.status,
       rating: item.rating ?? undefined,
+      cardTitle: item.card_title ?? undefined,
       opinion: item.opinion ?? undefined,
       genres: item.genres ?? [],
+      posterUrl: item.poster_url ?? undefined,
       createDate: new Date(item.create_date),
     })) as VisualMedia[];
   }
 
-  async addVisualMedia(media: Omit<VisualMedia, 'id' | 'createDate'>): Promise<void> {
+  async addVisualMedia(
+    media: Omit<VisualMedia, 'id' | 'createDate' | 'posterUrl'>,
+    posterFile?: File | null,
+  ): Promise<void> {
     const userId = this.supabase.userId;
     if (!userId) throw new Error('No autenticado');
 
-    const { error } = await this.supabase.client.from('media').insert({
-      user_id: userId,
-      title: media.title,
-      type: media.type,
-      platform: media.platform,
-      seasons: media.seasons ?? undefined,
-      status: media.status,
-      rating: media.rating ?? undefined,
-      opinion: media.opinion ?? undefined,
-      genres: media.genres ?? [],
-    });
+    const { data: insertData, error: insertError } = await this.supabase.client
+      .from('media')
+      .insert({
+        user_id: userId,
+        title: media.title,
+        type: media.type,
+        platform: media.platform,
+        seasons: media.seasons ?? undefined,
+        status: media.status,
+        rating: media.rating ?? undefined,
+        opinion: media.opinion ?? undefined,
+        genres: media.genres ?? [],
+        card_title: media.cardTitle ?? undefined,
+        poster_url: null,
+      })
+      .select('id')
+      .single();
 
-    if (error) throw error;
+    if (insertError) throw insertError;
+
+    const mediaId = insertData.id;
+
+    if (posterFile) {
+      const posterUrl = await this.supabase.uploadPoster(posterFile, mediaId);
+      await this.supabase.client.from('media').update({ poster_url: posterUrl }).eq('id', mediaId);
+    }
+
     this.reload$.next();
   }
 
-  async updateVisualMedia(id: string, cambios: Partial<VisualMedia>): Promise<void> {
+  async updateVisualMedia(
+    id: string,
+    cambios: Partial<VisualMedia>,
+    newPoster?: File | null,
+  ): Promise<void> {
     const updateData: any = {};
     if (cambios.title !== undefined) updateData.title = cambios.title;
     if (cambios.type !== undefined) updateData.type = cambios.type;
@@ -68,9 +91,17 @@ export class MediaService {
     if (cambios.seasons !== undefined) updateData.seasons = cambios.seasons;
     if (cambios.status !== undefined) updateData.status = cambios.status;
     if (cambios.rating !== undefined) updateData.rating = cambios.rating ?? null;
+    if (cambios.cardTitle !== undefined) updateData.card_title = cambios.cardTitle ?? null;
     if (cambios.opinion !== undefined) updateData.opinion = cambios.opinion ?? null;
     if (cambios.genres !== undefined) updateData.genres = cambios.genres;
-    if (cambios.createDate !== undefined) updateData.createDate = cambios.createDate ?? null;
+
+    if (newPoster) {
+      const publicUrl = await this.supabase.uploadPoster(newPoster, id);
+      updateData.poster_url = publicUrl;
+    } else if (newPoster === null && cambios.posterUrl === undefined) {
+      updateData.poster_url = null;
+      await this.supabase.deletePoster(id);
+    }
 
     const { error } = await this.supabase.client.from('media').update(updateData).eq('id', id);
 
@@ -79,6 +110,7 @@ export class MediaService {
   }
 
   async deleteVisualMedia(id: string): Promise<void> {
+    await this.supabase.deletePoster(id);
     const { error } = await this.supabase.client.from('media').delete().eq('id', id);
 
     if (error) throw error;
@@ -88,49 +120,4 @@ export class MediaService {
   recargar(): void {
     this.reload$.next();
   }
-  // private visualMedia = new BehaviorSubject<VisualMedia[]>([]);
-  // visualMedia$ = this.visualMedia.asObservable();
-
-  // constructor() {
-  //   this.loadInitialData();
-  // }
-
-  // private loadInitialData(): void {
-  //   const datosGuardados = localStorage.getItem('mis-series');
-  //   if (datosGuardados) {
-  //     this.visualMedia.next(JSON.parse(datosGuardados));
-  //   }
-  // }
-
-  // getUniquesGenres(): string[] {
-  //   const generos = new Set<string>();
-  //   this.visualMedia.value.forEach((s) => s.genres.forEach((g) => generos.add(g)));
-  //   return Array.from(generos).sort();
-  // }
-
-  // addVisualMedia(serie: Omit<VisualMedia, 'id' | 'createDate'>): void {
-  //   const nueva: VisualMedia = {
-  //     ...serie,
-  //     id: crypto.randomUUID(),
-  //     createDate: new Date(),
-  //   };
-  //   const actuales = this.visualMedia.value;
-  //   this.visualMedia.next([...actuales, nueva]);
-  //   this.save();
-  // }
-
-  // updateVisualMedia(id: string, cambios: Partial<VisualMedia>): void {
-  //   const actuales = this.visualMedia.value.map((s) => (s.id === id ? { ...s, ...cambios } : s));
-  //   this.visualMedia.next(actuales);
-  //   this.save();
-  // }
-
-  // deleteVisualMedia(id: string): void {
-  //   this.visualMedia.next(this.visualMedia.value.filter((s) => s.id !== id));
-  //   this.save();
-  // }
-
-  // private save(): void {
-  //   localStorage.setItem('mis-series', JSON.stringify(this.visualMedia.value));
-  // }
 }

@@ -1,103 +1,118 @@
 <div
-  class="group bg-gray-100 dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 p-3 hover:shadow-sm dark:hover:shadow-gray-900/50 transition-all duration-300 relative"
+  class="group bg-gray-100 dark:bg-gray-900 rounded-xl cursor-pointer border border-gray-100 dark:border-gray-800 p-3 hover:shadow-sm dark:hover:shadow-gray-900/50 transition-all duration-300 relative"
+  [routerLink]="['/media', genericView.id]"
 >
-  <div class="flex justify-between items-start mb-3">
-    <div>
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white transition-colors">
-        {{ genericView.title }}
+  <div
+    class="absolute top-1 left-1 z-100 px-2.5 py-1 text-xs font-semibold rounded-md text-white backdrop-blur-sm bg-black/40 border border-white/10"
+  >
+    {{ genericView.type === 'serie' ? 'Serie' : 'Película' }}
+  </div>
+  <div class="relative w-full aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-800 group">
+    <img
+      [src]="genericView.posterUrl"
+      [alt]="genericView.title"
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+
+    <!-- Overlay info -->
+    <div
+      class="absolute bottom-0 left-0 w-full h-[35%] bg-black/50 p-2 flex justify-between items-start"
+    >
+      <h3 class="text-sm font-semibold text-white">
+        {{ truncateText(genericView.title, 40) }}
       </h3>
-      <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 transition-colors">
-        {{ genericView.platform }}
-      </p>
-    </div>
-    <div class="flex flex-col items-center">
-      <span [class]="'text-xs px-2.5 py-1 rounded-full ' + badgeClass">
-        {{ genericView.status }}
-      </span>
-      <button
-        (click)="delete.emit(genericView.id); $event.stopPropagation()"
-        class="opacity-0 group-hover:opacity-100 p-1.5 text-gray-300 dark:text-gray-600 hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-        title="Eliminar serie"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
-      </button>
+
+      <div>
+        <span [class]="'text-xs px-2.5 py-1 rounded-full ' + badgeClass">
+          {{ genericView.status }}
+        </span>
+        <p class="text-xs text-center text-gray-300 mt-0.5">
+          {{ genericView.platform }}
+        </p>
+      </div>
     </div>
   </div>
-  <div class="flex items-center gap-1 mb-3">
-    @for (star of [1, 2, 3, 4, 5]; track star) {
-      <!-- ⭐ COMPLETA -->
-      @if (star <= fullStars) {
-        <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
-          />
-        </svg>
-      }
 
-      <!-- ⭐ MEDIA -->
-      @else if (star === fullStars + 1 && hasHalfStar) {
-        <div class="relative w-4 h-4">
-          <!-- fondo (vacía) -->
-          <svg class="absolute w-4 h-4 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+  <div class="flex justify-between items-center mt-2 mb-2">
+    <button
+      (click)="goToEdit(genericView.id, $event); $event.stopPropagation()"
+      class="w-full mr-2 text-center px-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
+    >
+      Editar
+    </button>
+
+    <button
+      (click)="delete.emit(genericView.id); $event.stopPropagation()"
+      class="w-10 h-10 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+      title="Eliminar serie"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+        />
+      </svg>
+    </button>
+  </div>
+  <div class="flex items-center justify-between mb-2">
+    <div class="flex items-center gap-1">
+      @for (star of [1, 2, 3, 4, 5]; track star) {
+        @if (star <= fullStars) {
+          <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
             <path
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
             />
           </svg>
-
-          <!-- mitad llena -->
-          <div class="absolute overflow-hidden w-1/2">
-            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+        } @else if (star === fullStars + 1 && hasHalfStar) {
+          <div class="relative w-4 h-4">
+            <!-- fondo (vacía) -->
+            <svg class="absolute w-4 h-4 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
               <path
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
               />
             </svg>
+            <div class="absolute overflow-hidden w-1/2">
+              <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
+                />
+              </svg>
+            </div>
           </div>
-        </div>
+        } @else {
+          <svg class="w-4 h-4 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
+            />
+          </svg>
+        }
       }
 
-      <!-- ⭐ VACÍA -->
-      @else {
-        <svg class="w-4 h-4 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z"
-          />
-        </svg>
-      }
-    }
-
-    <span class="text-xs text-gray-400 ml-1"> {{ rating }}/10 </span>
+      <span class="text-xs text-gray-400"> {{ rating }}/10 </span>
+    </div>
+    <div
+      class="flex items-center gap-1 py-1 px-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 text-xs"
+    >
+      <span class="text-xs text-gray-400 dark:text-gray-500">
+        {{ genericView.seasons }} temporada{{ genericView.seasons !== 1 ? 's' : '' }}
+      </span>
+    </div>
   </div>
 
-  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-[2.5rem] transition-colors">
-    {{ genericView.opinion || 'Sin opinión aún' }}
+  <p
+    class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-[2.5rem] mb-2 transition-colors"
+  >
+    {{ genericView.cardTitle || 'Sin opinión aún' }}
   </p>
 
-  <div class="flex gap-2 flex-wrap mb-4">
+  <div class="flex gap-2 flex-wrap">
     @for (genero of genericView.genres; track genero) {
       <span
         class="text-xs px-2 py-0.5 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded border border-gray-100 dark:border-gray-700 transition-colors"
         >{{ genero }}</span
       >
     }
-  </div>
-
-  <div
-    class="pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center transition-colors"
-  >
-    <span class="text-xs text-gray-400 dark:text-gray-500 transition-colors"
-      >{{ genericView.seasons }} temporada{{ genericView.seasons !== 1 ? 's' : '' }}</span
-    >
-    <a
-      [routerLink]="['/serie', genericView.id]"
-      class="text-sm text-gray-900 dark:text-gray-300 hover:underline opacity-0 group-hover:opacity-100 transition-opacity"
-      >Ver detalle →</a
-    >
   </div>
 </div>

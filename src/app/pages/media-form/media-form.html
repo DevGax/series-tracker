@@ -1,94 +1,104 @@
-<div class="max-w-2xl mx-auto px-6 py-6">
+<div class="max-w-5xl mx-auto px-6 py-6">
   <h1 class="text-2xl text-gray-900 dark:text-white mb-1 transition-colors mb-4">
-    Añadir nueva serie
+    {{ modeEdition ? 'Editar media' : 'Añadir nueva media' }}
   </h1>
 
   <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
+    <div class="grid grid-cols-3 gap-6">
+      <div class="col-span-2">
+        <app-image-upload [previewUrl]="previewUrl" (imageSelected)="onImageSelected($event)" />
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-1">Título</label>
+          <input
+            type="text"
+            formControlName="title"
+            class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Plataforma</label>
+            <select
+              formControlName="platform"
+              class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+            >
+              <option value="Netflix">Netflix</option>
+              <option value="HBO Max">HBO Max</option>
+              <option value="Amazon Prime">Amazon Prime</option>
+              <option value="Disney+">Disney+</option>
+              <option value="Apple TV+">Apple TV+</option>
+              <option value="Otra">Otra</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Tipo</label>
+            <select
+              formControlName="type"
+              class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+            >
+              <option value="serie">Serie</option>
+              <option value="movie">Película</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex flex-column items-center justify-center gap-4">
+          <label class="block text-sm font-medium text-gray-400 mb-1">Temporadas</label>
+          <input
+            type="number"
+            formControlName="seasons"
+            min="1"
+            class="w-1/3 px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Estado</label>
+            <select
+              formControlName="status"
+              class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+            >
+              <option value="pending">Pendiente</option>
+              <option value="viewing">Viendo</option>
+              <option value="completed">Completada</option>
+              <option value="abandoned">Abandonada</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Valoración (1-10)</label>
+            <input
+              type="number"
+              formControlName="rating"
+              min="1"
+              max="10"
+              class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+            />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-400 mb-1"
+            >Géneros (separados por coma)</label
+          >
+          <input
+            type="text"
+            formControlName="genres"
+            placeholder="Drama, Thriller, Sci-Fi"
+            class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
+          />
+        </div>
+      </div>
+    </div>
+
     <div>
-      <label class="block text-sm font-medium text-gray-400 mb-1">Título</label>
       <input
         type="text"
-        formControlName="title"
-        class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+        formControlName="cardTitle"
+        placeholder="Un título para tu opinión (opcional)"
+        class="w-2/3 px-3 flex text-center py-2 mb-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
       />
-    </div>
-
-    <div class="grid grid-cols-3 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Plataforma</label>
-        <select
-          formControlName="platform"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        >
-          <option value="Netflix">Netflix</option>
-          <option value="HBO Max">HBO Max</option>
-          <option value="Amazon Prime">Amazon Prime</option>
-          <option value="Disney+">Disney+</option>
-          <option value="Apple TV+">Apple TV+</option>
-          <option value="Otra">Otra</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Tipo</label>
-        <select
-          formControlName="type"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        >
-          <option value="serie">Serie</option>
-          <option value="movie">Película</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Temporadas</label>
-        <input
-          type="number"
-          formControlName="seasons"
-          min="1"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-4 gap-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Estado</label>
-        <select
-          formControlName="state"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        >
-          <option value="pending">Pendiente</option>
-          <option value="viewing">Viendo</option>
-          <option value="completed">Completada</option>
-          <option value="abandoned">Abandonada</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-400 mb-1">Valoración (1-10)</label>
-        <input
-          type="number"
-          formControlName="rating"
-          min="1"
-          max="10"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        />
-      </div>
-
-      <div class="col-span-2">
-        <label class="block text-sm font-medium text-gray-400 mb-1"
-          >Géneros (separados por coma)</label
-        >
-        <input
-          type="text"
-          formControlName="genres"
-          placeholder="Drama, Thriller, Sci-Fi"
-          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border-0 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700 focus:bg-white dark:focus:bg-gray-800 transition-all"
-        />
-      </div>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-400 mb-1">Tu opinión</label>
       <textarea
         formControlName="opinion"
         rows="4"
@@ -97,7 +107,7 @@
       ></textarea>
     </div>
 
-    <div class="flex gap-3 pt-1">
+    <div class="flex gap-3">
       <button
         type="submit"
         [disabled]="form.invalid"

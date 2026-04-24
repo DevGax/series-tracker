@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { VisualMedia } from '../../models/generic.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-serie-card',
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './serie-card.css',
 })
 export class SerieCard {
+  router = inject(Router);
   @Output() delete = new EventEmitter<string>();
   @Input({ required: true }) genericView!: VisualMedia;
 
@@ -31,5 +32,16 @@ export class SerieCard {
       pending: 'bg-amber-200 text-amber-600',
     };
     return map[this.genericView.status] || 'bg-gray-50 text-gray-600';
+  }
+
+  goToEdit(id: string, event: Event) {
+    event.stopPropagation(); // evita que salte el click del padre
+    this.router.navigate(['/editar', id]);
+  }
+
+  truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) return text;
+    const truncated = text.substring(0, maxLength);
+    return truncated.substring(0, truncated.lastIndexOf(' ')) + '...';
   }
 }

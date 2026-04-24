@@ -13,12 +13,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/media-form/media-form').then((m) => m.SitcomForm),
   },
   {
+    path: 'editar/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/media-form/media-form').then((m) => m.SitcomForm),
+  },
+  {
     path: 'auth',
     canActivate: [authRedirectGuard],
     loadComponent: () => import('./pages/auth/auth').then((m) => m.Auth),
   },
-  //   {
-  //     path: 'serie/:id',
-  //     loadComponent: () => import('./pages/serie-view/serie-view.component').then(m => m.SerieViewComponent)
-  //   }
+  {
+    path: 'media/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/media-view/media-view').then((m) => m.MediaView),
+  },
 ];

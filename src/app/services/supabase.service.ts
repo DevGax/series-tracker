@@ -72,4 +72,33 @@ export class SupabaseService {
   get userId(): string | undefined {
     return this.user()?.id;
   }
+
+  // ACTIONS POSTERS
+  async uploadPoster(file: File, serieId: string): Promise<string> {
+    const userId = this.userId;
+    if (!userId) throw new Error('No autenticado');
+
+    const filePath = `${userId}/${serieId}.webp`;
+
+    const { error } = await this.supabase.storage.from('posters').upload(filePath, file, {
+      upsert: true,
+      contentType: file.type,
+    });
+
+    if (error) throw error;
+
+    // Obtener URL pública
+    const { data } = this.supabase.storage.from('posters').getPublicUrl(filePath);
+
+    return data.publicUrl;
+  }
+
+  async deletePoster(serieId: string): Promise<void> {
+    const userId = this.userId;
+    if (!userId) return;
+
+    const filePath = `${userId}/${serieId}.webp`;
+
+    await this.supabase.storage.from('posters').remove([filePath]);
+  }
 }
